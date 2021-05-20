@@ -49,20 +49,20 @@ if(algorithm == '1'):
 
         # Loop to find currMax
         for i in range(1, int(features)+1):
-            n = Node(set.union({i}, tmpMax.feats))
+            n1 = Node(set.union({i}, tmpMax.feats))     # tmpMax holds last iteration's subset
 
             # Do not want to create subsets we checked last iteration
-            if not len(n.feats) == size:
+            if not len(n1.feats) == size:
                 continue
 
             # Init currMax to first valid subset
             if count == 1:
-                currMax = n
+                currMax = n1
             
             # Updates currMax
-            if n.acc >= currMax.acc:
-                currMax = n
-            print("Using feature(s) {} accuracy is {}%".format(str(n.feats), n.acc))
+            if n1.acc >= currMax.acc:
+                currMax = n1
+            print("Using feature(s) {} accuracy is {}%".format(str(n1.feats), n1.acc))
             count += 1
 
         if not size+1 > int(features):
@@ -71,13 +71,12 @@ if(algorithm == '1'):
         # Update true max, and set decreased flag if currMax < trueMax, meaning our search decreased from a higher accuracy
         if currMax.acc >= trueMax.acc:
             trueMax = currMax
-        else:
-            decreased = True
+
+        if currMax.acc < tmpMax.acc:
+            print("(Warning, Accuracy has decreased! Continuing search in case of local maxima)\n")
         size += 1
 
-    # Display results and accuracy decreased warning if applicable
-    if decreased:
-        print("\n(Warning, Accuracy has decreased!)")
+    # Display results
     if len(trueMax.feats) == 0:
         print("Finished search!! The best feature subset is {{}}, which has an accuracy of {}%".format(trueMax.acc))
     else:
@@ -101,7 +100,7 @@ else:
 
         # Loop to find currMax
         for i in range(1, int(features)+1):
-            n1 = Node(tmpMax.feats)
+            n1 = Node(tmpMax.feats)     # tmpMax holds last iteration's subset
             if(i in n1.feats):
                 n1.feats.remove(i)
 
@@ -128,13 +127,12 @@ else:
         # Update true max, and set decreased flag if currMax < trueMax, meaning our search decreased from a higher accuracy
         if currMax.acc >= trueMax.acc:
             trueMax = currMax
-        else:
-            decreased = True
+
+        if currMax.acc < tmpMax.acc:
+            print("(Warning, Accuracy has decreased! Continuing search in case of local maxima)\n")
         size -= 1
 
-    # Display results and accuracy decreased warning if applicable
-    if decreased:
-        print("\n(Warning, Accuracy has decreased!)")
+    # Display results
     if len(trueMax.feats) == 0:
         print("Finished search!! The best feature subset is {{}}, which has an accuracy of {}%".format(trueMax.acc))
     else:
