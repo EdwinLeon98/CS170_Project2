@@ -12,7 +12,7 @@ class Node():
 
     def validator(self):
         c = Classifier()
-        c.Train('cs_170_large80.txt')
+        c.Train('cs_170_small80.txt')
 
         dataSet = []
 
