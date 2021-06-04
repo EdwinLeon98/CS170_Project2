@@ -1,4 +1,5 @@
 import random
+from Classifier import Classifier
 
 # Node class
 class Node():
@@ -7,7 +8,35 @@ class Node():
         self.feats = set()
         for i in f:
             self.feats.add(i)
-        self.acc = round(random.uniform(1.00, 100.00), 2)
+        # self.acc = round(random.uniform(1.00, 100.00), 2)
+
+    def validator(self):
+        c = Classifier()
+        c.Train('cs_170_large80.txt')
+
+        dataSet = []
+
+        for i in range(len(c.getData())):
+            tmp = [c.getData()[i][0]]
+            for j in range(1, len(c.getData()[i])):
+                if(j in self.feats):
+                    tmp.append(c.getData()[i][j])
+            if len(tmp) > 1:
+                dataSet.append(tmp)
+                
+        # for i in dataSet:
+        #     print(str(i))
+        
+        tester = Classifier()
+        tester.setData(dataSet)
+        num = 0
+        classif = 0
+        for i in tester.getData():
+            classif = tester.Test(i)
+            if classif == i[0]:
+                num += 1
+
+        return (num/len(c.getData()))*100
 
 print("Welcome to Edwin Leon and Josh McIntyre's Feature Selection Algorithm")
 
@@ -36,6 +65,7 @@ while invalid:
 # Forward Selection Search
 if(algorithm == '1'):
     n = Node(set())         # Set n to Node with features = {}
+    n.acc = n.validator()
     print("Using no features and \"random\" evaluation, we get an accuracy of {}%".format(n.acc))
     print("Beginning search.")
     currMax = n             # Set current and true max to n
@@ -54,6 +84,8 @@ if(algorithm == '1'):
             # Do not want to create subsets we checked last iteration
             if not len(n1.feats) == size:
                 continue
+
+            n1.acc = n1.validator()
 
             # Init currMax to first valid subset
             if count == 1:
