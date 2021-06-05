@@ -117,6 +117,7 @@ if(algorithm == '1'):
 # Backward Elimination Search
 else:
     n = Node(set())         # Set n to Node with features = {1, 2, 3, 4, ..., nFeatures}
+    n.acc = n.validator()
     for i in range(1, int(features)+1):
         n.feats.add(i)
     print("Using all features {} and \"random\" evaluation, we get an accuracy of {}%".format(n.feats, n.acc))
@@ -139,6 +140,8 @@ else:
             # Do not want to create subsets we checked last iteration
             if not len(n1.feats) == size:
                 continue
+
+            n1.acc = n1.validator()
 
             # Init currMax to first valid subset
             if count == 1:
